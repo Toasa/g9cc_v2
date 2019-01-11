@@ -41,7 +41,7 @@ func mul() *Node {
 
     for {
         t := tokens[pos].(*Token)
-        if t.Ty == '*' {
+        if t.Ty == '*' || t.Ty == '/' {
             pos++
             lhs = new_node(t.Ty, lhs, num())
         } else {

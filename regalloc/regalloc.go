@@ -51,7 +51,7 @@ func Alloc_regs(irv []interface{}) []interface{} {
         switch ir.Op {
         case IR_IMM:
             ir.Lhs = alloc(ir.Lhs)
-        case '+', '-', '*':
+        case '+', '-', '*', '/':
             ir.Lhs = alloc(ir.Lhs)
             ir.Rhs = alloc(ir.Rhs)
         case IR_KILL:
