@@ -3,6 +3,7 @@ package token
 import (
     "fmt"
     "os"
+    "strings"
     . "g9cc_v2/common"
     . "g9cc_v2/utils"
 )
@@ -28,7 +29,7 @@ func Tokenize(s string) []interface{} {
         }
 
         // + or -
-        if s[i_input] == '+' || s[i_input] == '-' {
+        if strings.Contains("+-", string(s[i_input])) {
             add_token(int(s[i_input]), string(s[i_input]))
             i_input++
             continue

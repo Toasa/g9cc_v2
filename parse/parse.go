@@ -37,21 +37,18 @@ func num() *Node {
 }
 
 func expr() *Node {
-    var lhs *Node = num()
+    lhs := num()
+
     for {
         t := tokens[pos].(*Token)
-        op := t.Ty
-        if op == '+' || op == '-' {
-            pos++
-            lhs = new_node(op, lhs, num())
+        pos++
+        if t.Ty == '+' || t.Ty == '-' {
+            lhs = new_node(t.Ty, lhs, num())
         } else {
             break
         }
     }
-    t := tokens[pos].(*Token)
-    if t.Ty != TK_EOF {
-        Error("stray token")
-    }
+
     return lhs
 }
 

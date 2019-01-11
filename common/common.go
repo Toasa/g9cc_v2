@@ -1,10 +1,5 @@
 package common
 
-// import (
-//     "fmt"
-//     "os"
-// )
-
 // token.go
 
 const (

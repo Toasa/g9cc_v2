@@ -17,9 +17,9 @@ func main() {
         return
     }
 
-    input := os.Args[1] + "\000"
+    input := os.Args[1]
 
-    tokens := Tokenize(input)
+    tokens := Tokenize(input + "\000")
 
     var node *Node = Parse(tokens)
 
