@@ -28,8 +28,8 @@ func Tokenize(s string) []interface{} {
             continue
         }
 
-        // + or -
-        if strings.Contains("+-", string(s[i_input])) {
+        // + or - or *
+        if strings.Contains("+-*", string(s[i_input])) {
             add_token(int(s[i_input]), string(s[i_input]))
             i_input++
             continue

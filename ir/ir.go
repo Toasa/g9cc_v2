@@ -20,7 +20,7 @@ func gen(node *Node) int {
         regno++
         irv = append(irv, new_ir(IR_IMM, r, node.Val))
         return r
-    } else if op == '+' || op == '-' {
+    } else if op == '+' || op == '-' || op == '*'{
 
         lhs := gen(node.Lhs)
         rhs := gen(node.Rhs)

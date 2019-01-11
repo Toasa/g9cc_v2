@@ -9,7 +9,7 @@ import (
 
 // Recursive-descent parser
 
-var pos int = 0
+var pos int
 var tokens []interface{}
 
 func new_node(op int, lhs *Node, rhs *Node) *Node {
@@ -36,14 +36,30 @@ func num() *Node {
     return nil
 }
 
-func expr() *Node {
+func mul() *Node {
     lhs := num()
 
     for {
         t := tokens[pos].(*Token)
-        pos++
-        if t.Ty == '+' || t.Ty == '-' {
+        if t.Ty == '*' {
+            pos++
             lhs = new_node(t.Ty, lhs, num())
+        } else {
+            break
+        }
+    }
+
+    return lhs
+}
+
+func expr() *Node {
+    lhs := mul()
+
+    for {
+        t := tokens[pos].(*Token)
+        if t.Ty == '+' || t.Ty == '-' {
+            pos++
+            lhs = new_node(t.Ty, lhs, mul())
         } else {
             break
         }
@@ -54,5 +70,13 @@ func expr() *Node {
 
 func Parse(t []interface{}) *Node {
     tokens = t
-    return expr()
+    pos = 0
+
+    node := expr()
+
+    last_token := tokens[pos].(*Token)
+    if last_token.Ty != TK_EOF {
+        Error(fmt.Sprintf("stray token: %s", last_token.Input))
+    }
+    return node
 }

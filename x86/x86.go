@@ -17,6 +17,10 @@ func Gen_x86(irv []interface{}) {
             fmt.Printf("    add %s, %s\n", Regs[ir.Lhs], Regs[ir.Rhs])
         case '-':
             fmt.Printf("    sub %s, %s\n", Regs[ir.Lhs], Regs[ir.Rhs])
+        case '*':
+            fmt.Printf("    mov rax, %s\n", Regs[ir.Rhs])
+            fmt.Printf("    mul %s\n", Regs[ir.Lhs])
+            fmt.Printf("    mov %s, rax\n", Regs[ir.Lhs])
         case IR_RETURN:
             fmt.Printf("    mov rax, %s\n", Regs[ir.Lhs])
             fmt.Printf("    ret\n")
