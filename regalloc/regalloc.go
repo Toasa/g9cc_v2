@@ -8,7 +8,7 @@ import (
 
 var used [8]bool
 
-// gen_ir()の段階で、中間表現のlhs, rhsには暫定的にレジスタ(のインデックス, regno)が割り当てられている
+// Gen_ir()(in ir.go)の段階で、中間表現のlhs, rhsには暫定的にレジスタ(のインデックス, regno)が割り当てられている
 // regnoはインクリメンタルに増えていくので、reallocateする必要がある
 // reg_mapはそのregnoをインデックスに、8つのレジスタの中から実際に割り当てるレジスタのインデックスを
 // 値として格納する
@@ -58,7 +58,7 @@ func Alloc_regs(irv []interface{}) []interface{} {
             kill(reg_map[ir.Lhs])
             ir.Op = IR_NOP
         case IR_RETURN:
-            kill(reg_map[ir.Lhs])
+            ir.Lhs = alloc(ir.Lhs)
         default:
             Error("invalid operator")
         }

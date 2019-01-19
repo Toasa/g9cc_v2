@@ -3,12 +3,12 @@ package main
 import (
     "fmt"
     "os"
-    . "g9cc_v2/common"
     . "g9cc_v2/token"
     . "g9cc_v2/parse"
     . "g9cc_v2/ir"
     . "g9cc_v2/regalloc"
     . "g9cc_v2/x86"
+    // "github.com/k0kubun/pp"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 
     tokens := Tokenize(input + "\000")
 
-    var node *Node = Parse(tokens)
+    node := Parse(tokens)
 
     irv := Gen_ir(node)
 

@@ -9,6 +9,7 @@ import (
 )
 
 var tokens []interface{}
+var keywords map[string]int
 
 func add_token(ty int, input string) *Token {
     t := &Token{Ty: ty, Input: input}
@@ -16,7 +17,7 @@ func add_token(ty int, input string) *Token {
     return t
 }
 
-func Tokenize(s string) []interface{} {
+func scan(s string) []interface{} {
     //cur_token := 0
     i_input := 0
 
@@ -28,10 +29,30 @@ func Tokenize(s string) []interface{} {
             continue
         }
 
-        // + or - or *
-        if strings.Contains("+-*/", string(s[i_input])) {
+        // single-letter token
+        if strings.Contains("+-*/;", string(s[i_input])) {
             add_token(int(s[i_input]), string(s[i_input]))
             i_input++
+            continue
+        }
+
+        // keyword
+        if Isalpha(s[i_input]) || s[i_input] == '_' {
+            len := 1
+            for i := len + i_input; Isalpha(s[i]) || Isdigit(s[i]) || s[i] == '_'; {
+                len++
+                i = len + i_input
+            }
+
+            name := s[i_input : len + i_input]
+
+            ty, ok := keywords[name]
+            if !ok {
+                Error(fmt.Sprintf("unknown identifier: %s", name))
+            }
+
+            add_token(ty, name)
+            i_input += len
             continue
         }
 
@@ -55,4 +76,10 @@ func Tokenize(s string) []interface{} {
     add_token(TK_EOF, "")
 
     return tokens
+}
+
+func Tokenize(s string) []interface{} {
+    keywords = make(map[string]int)
+    keywords["return"] = TK_RETURN
+    return scan(s)
 }

@@ -25,3 +25,7 @@ func Isdigit(c uint8) bool {
 func Isspace(c uint8) bool {
     return c == ' ' || c == '\n' || c == '\t'
 }
+
+func Isalpha(c uint8) bool {
+    return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
+}
