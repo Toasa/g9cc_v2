@@ -20,6 +20,15 @@ func expect(ty int) {
     pos++
 }
 
+func consume(ty int) bool {
+    t := tokens[pos].(*Token)
+    if t.Ty != ty {
+        return false
+    }
+    pos++
+    return true
+}
+
 func new_node(op int, lhs *Node, rhs *Node) *Node {
     return &Node{Ty: op, Lhs: lhs, Rhs: rhs}
 }
@@ -30,24 +39,30 @@ func fail(i int) {
     os.Exit(1)
 }
 
-func num() *Node {
+func term() *Node {
     t := tokens[pos].(*Token)
+    pos++
+
     if t.Ty == TK_NUM {
-        pos++
         return &Node{Ty: ND_NUM, Val: t.Val}
     }
-    Error(fmt.Sprintf("number expected, but got %s", t.Input))
+
+    if t.Ty == TK_IDENT {
+        return &Node{Ty: ND_IDENT, Name: t.Name}
+    }
+
+    Error(fmt.Sprintf("number or identifier expected, but got %s", t.Input))
     return nil
 }
 
 func mul() *Node {
-    lhs := num()
+    lhs := term()
 
     for {
         t := tokens[pos].(*Token)
         if t.Ty == '*' || t.Ty == '/' {
             pos++
-            lhs = new_node(t.Ty, lhs, num())
+            lhs = new_node(t.Ty, lhs, term())
         } else {
             break
         }
@@ -71,6 +86,14 @@ func expr() *Node {
     return lhs
 }
 
+func assign() *Node {
+    lhs := expr()
+    if consume('=') {
+        return new_node('=', lhs, expr())
+    }
+    return lhs
+}
+
 func stmt() *Node {
 
     node := &Node{Ty: ND_COMP_STMT}
@@ -84,11 +107,13 @@ func stmt() *Node {
         e := new(Node)
 
         if t.Ty == TK_RETURN {
+            // `return` tokenを読み飛ばす
             pos++
             e.Ty = ND_RETURN
-            e.Expr = expr()
+            e.Expr = assign()
         } else {
-            Error("unexpected token")
+            e.Ty = ND_EXPR_STMT
+            e.Expr = assign()
         }
 
         node.Stmts = append(node.Stmts, e)
@@ -96,11 +121,12 @@ func stmt() *Node {
         expect(';')
     }
 
+    // error
+    return nil
 }
 
 func Parse(t []interface{}) *Node {
     tokens = t
-    pos = 0
 
     return stmt()
 }

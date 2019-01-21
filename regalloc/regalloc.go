@@ -49,16 +49,14 @@ func Alloc_regs(irv []interface{}) []interface{} {
     for i := 0; i < len(irv); i++ {
         ir := irv[i].(*IR)
         switch ir.Op {
-        case IR_IMM:
+        case IR_IMM, IR_ALLOCA, IR_RETURN:
             ir.Lhs = alloc(ir.Lhs)
-        case '+', '-', '*', '/':
+        case IR_MOV, IR_LOAD, IR_STORE, '+', '-', '*', '/':
             ir.Lhs = alloc(ir.Lhs)
             ir.Rhs = alloc(ir.Rhs)
         case IR_KILL:
             kill(reg_map[ir.Lhs])
             ir.Op = IR_NOP
-        case IR_RETURN:
-            ir.Lhs = alloc(ir.Lhs)
         default:
             Error("invalid operator")
         }

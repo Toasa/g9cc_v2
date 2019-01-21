@@ -30,13 +30,13 @@ func scan(s string) []interface{} {
         }
 
         // single-letter token
-        if strings.Contains("+-*/;", string(s[i_input])) {
+        if strings.Contains("+-*/;=", string(s[i_input])) {
             add_token(int(s[i_input]), string(s[i_input]))
             i_input++
             continue
         }
 
-        // keyword
+        // Identifier
         if Isalpha(s[i_input]) || s[i_input] == '_' {
             len := 1
             for i := len + i_input; Isalpha(s[i]) || Isdigit(s[i]) || s[i] == '_'; {
@@ -48,10 +48,11 @@ func scan(s string) []interface{} {
 
             ty, ok := keywords[name]
             if !ok {
-                Error(fmt.Sprintf("unknown identifier: %s", name))
+                ty = TK_IDENT
             }
 
-            add_token(ty, name)
+            t := add_token(ty, name)
+            t.Name = name
             i_input += len
             continue
         }

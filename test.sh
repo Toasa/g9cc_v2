@@ -29,5 +29,8 @@ try 6 'return 12/2;'
 try 12 'return 10/5 + 2*5;'
 try 3 'return 1 + 10 / 5;'
 try 3 'return 10 / 5 + 1;'
+try 2 'a = 2; return a;'
+try 10 'a=2; b=3+2; return a*b;'
+try 10 'a=2; b=3+a; return a*b;'
 
 echo OK
